@@ -5,20 +5,20 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.dat, Sun Oct 22 17:18:23 2023
+ * Disassembly of dsdt.aml, Sun Oct 22 17:42:10 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x0000639A (25498)
+ *     Length           0x00006531 (25905)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0x95
+ *     Checksum         0x64
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
- *     OEM Revision     0x00000002 (2)
- *     Compiler ID      "ACPI"
- *     Compiler Version 0x00040000 (262144)
+ *     OEM Revision     0x00000003 (3)
+ *     Compiler ID      "INTL"
+ *     Compiler Version 0x20230628 (539166248)
  */
-DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
+DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
 {
     External (_SB_, DeviceObj)
     External (_SB_.ALIB, MethodObj)    // 2 Arguments
@@ -214,7 +214,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
         VARR = Local0
     }
 
-    OperationRegion (GNVS, SystemMemory, 0xCDF3BA98, 0x0000018D)
+    OperationRegion (GNVS, SystemMemory, 0xCDF3BA98, 0x018D)
     Field (GNVS, AnyAcc, NoLock, Preserve)
     {
         SMIF,   8, 
@@ -297,7 +297,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
         HWCH,   8
     }
 
-    OperationRegion (OGNS, SystemMemory, 0xCDF3BF18, 0x0000000C)
+    OperationRegion (OGNS, SystemMemory, 0xCDF3BF18, 0x0C)
     Field (OGNS, AnyAcc, Lock, Preserve)
     {
         OG00,   8, 
@@ -497,7 +497,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
 
     Name (BUFN, Zero)
     Name (MBUF, Buffer (0x1000){})
-    OperationRegion (MDBG, SystemMemory, 0xCDEB3018, 0x00001004)
+    OperationRegion (MDBG, SystemMemory, 0xCDEB3018, 0x1004)
     Field (MDBG, AnyAcc, Lock, Preserve)
     {
         MDG0,   32768
@@ -747,14 +747,13 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
         Zero, 
         Zero
     })
-            Name (_S3, Package (0x04)  // _S3_: S3 System State
-            {
-                0x03, 
-                0x03, 
-                Zero, 
-                Zero
-            })
-
+    Name (_S3, Package (0x04)  // _S3_: S3 System State
+    {
+        0x03, 
+        0x03, 
+        Zero, 
+        Zero
+    })
     Name (_S4, Package (0x04)  // _S4_: S4 System State
     {
         0x04, 
@@ -4134,16 +4133,10 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                         USGC,   8
                     }
 
-                    OperationRegion (ECMM, SystemMemory, 0xFEFF0400, 0x01FF)
-                    Field (ECMM, ByteAcc, Lock, Preserve)
+                    OperationRegion (ECF2, EmbeddedControl, Zero, 0xFF)
+                    Field (ECF2, ByteAcc, Lock, Preserve)
                     {
-                        XXX0,   8, 
-                        XXX1,   8, 
-                        XXX2,   8, 
-                        Offset (0x0B), 
-                        IKBW,   8, 
-                        USBC,   8, 
-                        USBE,   8, 
+                        Offset (0x0E), 
                         STAS,   8, 
                             ,   7, 
                         EOBF,   1, 
@@ -4157,28 +4150,8 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                         Offset (0x20), 
                         RCMD,   8, 
                             ,   7, 
-                        EGC6,   1, 
-                        TESR,   8, 
-                        HBDA,   8, 
-                        KBLL,   8, 
-                        ANGL,   16, 
-                        ACLI,   8, 
-                        FEST,   8, 
-                        Offset (0x60), 
-                        TSR1,   8, 
-                        TSR2,   8, 
-                        TSR3,   8, 
-                        TSI,    4, 
-                        HYST,   4, 
-                        TSHT,   8, 
-                        TSLT,   8, 
-                        TSSR,   8, 
-                        CHGR,   16, 
                         Offset (0x70), 
                         PECV,   8, 
-                        PLMX,   8, 
-                        TS4H,   8, 
-                        TS4L,   8, 
                         Offset (0x7C), 
                         DPVS,   8, 
                         Offset (0x7E), 
@@ -4186,8 +4159,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                         LSTE,   1, 
                         Offset (0x80), 
                         ECWR,   8, 
-                        XX10,   8, 
-                        XX11,   16, 
+                        Offset (0x84), 
                         B1DC,   16, 
                         B1FV,   16, 
                         B1FC,   16, 
@@ -4195,25 +4167,14 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                         B1ST,   8, 
                         B1CR,   16, 
                         B1RC,   16, 
-                        B1VT,   16, 
-                        BPCN,   8, 
-                        Offset (0x99), 
-                        B1LC,   16, 
-                        Offset (0xA8), 
-                        FLAG,   1, 
-                            ,   6, 
-                        GPUF,   1, 
-                        Offset (0xB2), 
-                        KBBL,   8, 
-                        Offset (0xF0), 
-                            ,   3, 
-                        TPCC,   1, 
-                            ,   2, 
-                        DRMD,   1, 
                         Offset (0xF1), 
-                        TPSV,   8, 
                         THOT,   8, 
-                        TCRT,   8, 
+                        TCRT,   8
+                    }
+
+                    OperationRegion (ECMM, SystemMemory, 0xFEFF0400, 0x01FF)
+                    Field (ECMM, ByteAcc, Lock, Preserve)
+                    {
                         Offset (0x128), 
                         BTMF,   88, 
                         Offset (0x137), 
@@ -4380,7 +4341,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                         SSZE = 0x07
                         SMUF = Arg0
                         SMUD = Arg1
-                        ^^^^ALIB (0x0C, ATCS)
+                        ALIB (0x0C, ATCS)
                     }
 
                     Method (DPTC, 0, NotSerialized)
