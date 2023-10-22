@@ -747,10 +747,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
         Zero, 
         Zero
     })
-    If ((CNSB == Zero))
-    {
-        If ((DAS3 == One))
-        {
             Name (_S3, Package (0x04)  // _S3_: S3 System State
             {
                 0x03, 
@@ -758,8 +754,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000002)
                 Zero, 
                 Zero
             })
-        }
-    }
 
     Name (_S4, Package (0x04)  // _S4_: S4 System State
     {
