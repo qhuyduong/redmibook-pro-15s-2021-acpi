@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Sun Oct 22 17:42:10 2023
+ * Disassembly of dsdt.aml, Sun Oct 22 20:29:13 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x00006531 (25905)
+ *     Length           0x000064E4 (25828)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0x64
+ *     Checksum         0x3E
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -25,7 +25,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     External (_SB_.APTS, MethodObj)    // 1 Arguments
     External (_SB_.AWAK, MethodObj)    // 1 Arguments
     External (_SB_.PCI0.GP17.VGA_.AFN7, MethodObj)    // 1 Arguments
-    External (_SB_.PCI0.LPC0.EC0_.HPTL, MethodObj)    // 0 Arguments
     External (_SB_.TPM2.PTS_, MethodObj)    // 1 Arguments
     External (_SB_.UBTC, UnknownObj)
     External (_SB_.UBTC.CCI0, FieldUnitObj)
@@ -4355,7 +4354,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         Return (Zero)
                     }
 
-                    Method (XPTL, 0, NotSerialized)
+                    Method (HPTL, 0, NotSerialized)
                     {
                         If ((PTPL > Zero))
                         {
@@ -4639,20 +4638,8 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         Notify (BATT, 0x81) // Information Change
                     }
 
-                    Method (XQ80, 0, NotSerialized)
+                    Method (_Q80, 0, NotSerialized)  // _Qxx: EC Query, xx=0x00-0xFF
                     {
-                        If ((LSTE == Zero))
-                        {
-                            ALBH (0x06, 0x4E20)
-                            ALBH (0x07, 0x4E20)
-                            ALBH (0x05, 0x00051C98)
-                            ALIB (One, 0x05)
-                        }
-                        Else
-                        {
-                            STTC ()
-                        }
-
                         LIDS = ECRD (RefOf (LSTE))
                         Notify (LID0, 0x80) // Status Change
                     }
