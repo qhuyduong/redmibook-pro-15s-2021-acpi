@@ -167,14 +167,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     {
         PRWP [Zero] = Arg0
         PRWP [One] = Arg1
-        If ((DAS3 == Zero))
-        {
-            If ((Arg1 <= 0x03))
-            {
-                PRWP [One] = Zero
-            }
-        }
-
         Return (PRWP) /* \PRWP */
     }
 
@@ -4361,7 +4353,8 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                             ALBH (0x06, (FPPT * 0x03E8))
                             ALBH (0x07, (SPPT * 0x03E8))
                             ALBH (0x05, (HSPL * 0x03E8))
-                            ALIB (One, 0x05)
+                            Local0 = Buffer (0x05){}
+                            ALIB (One, Local0)
                             Return (One)
                         }
 
@@ -4640,6 +4633,19 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
 
                     Method (_Q80, 0, NotSerialized)  // _Qxx: EC Query, xx=0x00-0xFF
                     {
+                        If ((LSTE == Zero))
+                        {
+                            ALBH (0x06, 0x4E20)
+                            ALBH (0x07, 0x4E20)
+                            ALBH (0x05, 0x00051C98)
+                            Local0 = Buffer (0x05){}
+                            ALIB (One, Local0)
+                        }
+                        Else
+                        {
+                            STTC ()
+                        }
+
                         LIDS = ECRD (RefOf (LSTE))
                         Notify (LID0, 0x80) // Status Change
                     }
