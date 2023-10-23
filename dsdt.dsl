@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Mon Oct 23 10:31:08 2023
+ * Disassembly of dsdt.aml, Mon Oct 23 12:19:15 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x000065CE (26062)
+ *     Length           0x000065E6 (26086)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0x5D
+ *     Checksum         0xC2
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -20,7 +20,6 @@
  */
 DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
 {
-    External (_SB_, DeviceObj)
     External (_SB_.ALIB, MethodObj)    // 2 Arguments
     External (_SB_.APTS, MethodObj)    // 1 Arguments
     External (_SB_.AWAK, MethodObj)    // 1 Arguments
@@ -57,7 +56,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     External (M020, MethodObj)    // 5 Arguments
     External (MPTS, MethodObj)    // 1 Arguments
     External (MWAK, MethodObj)    // 1 Arguments
-    External (XOSI, MethodObj)    // 1 Arguments
 
     OperationRegion (DBG0, SystemIO, 0x80, One)
     Field (DBG0, ByteAcc, NoLock, Preserve)
@@ -167,6 +165,14 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     {
         PRWP [Zero] = Arg0
         PRWP [One] = Arg1
+        If ((DAS3 == Zero))
+        {
+            If ((Arg1 <= 0x03))
+            {
+                PRWP [One] = Zero
+            }
+        }
+
         Return (PRWP) /* \PRWP */
     }
 
@@ -371,82 +377,82 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     {
         If ((OSTB == Ones))
         {
-            If (CondRefOf (\XOSI, Local0))
+            If (CondRefOf (\_OSI, Local0))
             {
                 OSTB = Zero
                 TPOS = Zero
-                If (XOSI ("Windows 2001"))
+                If (_OSI ("Windows 2001"))
                 {
                     OSTB = 0x08
                     TPOS = 0x08
                 }
 
-                If (XOSI ("Windows 2001.1"))
+                If (_OSI ("Windows 2001.1"))
                 {
                     OSTB = 0x20
                     TPOS = 0x20
                 }
 
-                If (XOSI ("Windows 2001 SP1"))
+                If (_OSI ("Windows 2001 SP1"))
                 {
                     OSTB = 0x10
                     TPOS = 0x10
                 }
 
-                If (XOSI ("Windows 2001 SP2"))
+                If (_OSI ("Windows 2001 SP2"))
                 {
                     OSTB = 0x11
                     TPOS = 0x11
                 }
 
-                If (XOSI ("Windows 2001 SP3"))
+                If (_OSI ("Windows 2001 SP3"))
                 {
                     OSTB = 0x12
                     TPOS = 0x12
                 }
 
-                If (XOSI ("Windows 2006"))
+                If (_OSI ("Windows 2006"))
                 {
                     OSTB = 0x40
                     TPOS = 0x40
                 }
 
-                If (XOSI ("Windows 2006 SP1"))
+                If (_OSI ("Windows 2006 SP1"))
                 {
                     OSTB = 0x41
                     TPOS = 0x41
                     OSSP = One
                 }
 
-                If (XOSI ("Windows 2009"))
+                If (_OSI ("Windows 2009"))
                 {
                     OSSP = One
                     OSTB = 0x50
                     TPOS = 0x50
                 }
 
-                If (XOSI ("Windows 2012"))
+                If (_OSI ("Windows 2012"))
                 {
                     OSSP = One
                     OSTB = 0x60
                     TPOS = 0x60
                 }
 
-                If (XOSI ("Windows 2013"))
+                If (_OSI ("Windows 2013"))
                 {
                     OSSP = One
                     OSTB = 0x61
                     TPOS = 0x61
                 }
 
-                If (XOSI ("Windows 2015"))
+                If (_OSI ("Windows 2015"))
                 {
                     OSSP = One
                     OSTB = 0x70
                     TPOS = 0x70
                 }
 
-                If (XOSI ("Linux"))
+                If (_OSI ("Linux"))
                 {
                     LINX = One
                     OSTB = 0x80
@@ -738,13 +744,20 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
         Zero, 
         Zero
     })
-    Name (_S3, Package (0x04)  // _S3_: S3 System State
+    If ((CNSB == Zero))
     {
-        0x03, 
-        0x03, 
-        Zero, 
-        Zero
-    })
+        If ((DAS3 == One))
+        {
+            Name (_S3, Package (0x04)  // _S3_: S3 System State
+            {
+                0x03, 
+                0x03, 
+                Zero, 
+                Zero
+            })
+        }
+    }
+
     Name (_S4, Package (0x04)  // _S4_: S4 System State
     {
         0x04, 
@@ -761,7 +774,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     })
     Scope (_GPE)
     {
-        Method (XL08, 0, NotSerialized)
+        Method (_L08, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             TPST (0x3908)
             If ((TBEN == Zero))
@@ -776,25 +789,25 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Notify (\_SB.PWRB, 0x02) // Device Wake
         }
 
-        Method (XL0D, 0, NotSerialized)
+        Method (_L0D, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             TPST (0x390D)
             Notify (\_SB.PCI0.GPP2, 0x02) // Device Wake
         }
 
-        Method (XL0E, 0, NotSerialized)
+        Method (_L0E, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             TPST (0x390E)
             Notify (\_SB.PCI0.GPP4, 0x02) // Device Wake
         }
 
-        Method (XL0F, 0, NotSerialized)
+        Method (_L0F, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             TPST (0x390F)
             Notify (\_SB.PCI0.GPP3, 0x02) // Device Wake
         }
 
-        Method (XL19, 0, NotSerialized)
+        Method (_L19, 0, NotSerialized)  // _Lxx: Level-Triggered GPE, xx=0x00-0xFF
         {
             TPST (0x3919)
             Notify (\_SB.PCI0.GP17.XHC0, 0x02) // Device Wake
@@ -1932,7 +1945,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (GPP2)
             {
                 Name (_ADR, 0x00010003)  // _ADR: Address
-                Method (RHRW, 0, NotSerialized)
+                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     If ((WKPM == One))
                     {
@@ -2069,7 +2082,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (GPP3)
             {
                 Name (_ADR, 0x00020001)  // _ADR: Address
-                Method (RHRW, 0, NotSerialized)
+                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     If ((WKPM == One))
                     {
@@ -2211,7 +2224,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (GPP4)
             {
                 Name (_ADR, 0x00020002)  // _ADR: Address
-                Method (RHRW, 0, NotSerialized)
+                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     If ((WKPM == One))
                     {
@@ -2385,7 +2398,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (GPP5)
             {
                 Name (_ADR, 0x00020003)  // _ADR: Address
-                Method (RHRW, 0, NotSerialized)
+                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     If ((WKPM == One))
                     {
@@ -2912,7 +2925,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                 Device (XHC0)
                 {
                     Name (_ADR, 0x03)  // _ADR: Address
-                    Method (RHRW, 0, NotSerialized)
+                    Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                     {
                         Return (GPRW (0x19, 0x04))
                     }
@@ -3149,7 +3162,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                 Device (XHC1)
                 {
                     Name (_ADR, 0x04)  // _ADR: Address
-                    Method (RHRW, 0, NotSerialized)
+                    Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                     {
                         Return (GPRW (0x19, 0x04))
                     }
@@ -3483,7 +3496,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (GP19)
             {
                 Name (_ADR, 0x00080003)  // _ADR: Address
-                Method (RHRW, 0, NotSerialized)
+                Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                 {
                     If ((WKPM == One))
                     {
@@ -3620,7 +3633,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
             Device (HPET)
             {
                 Name (_HID, EisaId ("PNP0103") /* HPET System Timer */)  // _HID: Hardware ID
-                Method (XSTA, 0, NotSerialized)
+                Method (_STA, 0, NotSerialized)  // _STA: Status
                 {
                     If ((HPEN == One))
                     {
@@ -3636,7 +3649,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                     Return (One)
                 }
 
-                Method (XCRS, 0, NotSerialized)
+                Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                 {
                     Name (BUF0, ResourceTemplate ()
                     {
@@ -3649,10 +3662,10 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                             0x00000400,         // Address Length
                             _Y07)
                     })
-                    CreateDWordField (BUF0, \_SB.PCI0.HPET.XCRS._Y07._BAS, HPEB)  // _BAS: Base Address
+                    CreateDWordField (BUF0, \_SB.PCI0.HPET._CRS._Y07._BAS, HPEB)  // _BAS: Base Address
                     Local0 = 0xFED00000
                     HPEB = (Local0 & 0xFFFFFC00)
-                    Return (BUF0) /* \_SB_.PCI0.HPET.XCRS.BUF0 */
+                    Return (BUF0) /* \_SB_.PCI0.HPET._CRS.BUF0 */
                 }
             }
 
@@ -3726,7 +3739,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                             0x02,               // Length
                             )
                         IRQNoFlags ()
-                            {}
+                            {2}
                     })
                 }
 
@@ -3751,7 +3764,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                             0x02,               // Length
                             )
                         IRQNoFlags ()
-                            {}
+                            {8}
                     })
                     Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
                     {
@@ -3799,7 +3812,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                             0x04,               // Length
                             )
                         IRQNoFlags ()
-                            {}
+                            {0}
                     })
                     Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
                     {
@@ -4896,7 +4909,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                                 Return (0x0F)
                             }
 
-                            Method (RHRW, 0, NotSerialized)
+                            Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
                             {
                                 Return (GPRW (0x0E, 0x03))
                             }
@@ -4978,7 +4991,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
 
             Scope (GPP4)
             {
-                Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+                Method (RHRS, 0, NotSerialized)
                 {
                     Name (RBUF, ResourceTemplate ()
                     {
@@ -4989,7 +5002,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                                 0x0012
                             }
                     })
-                    Return (RBUF) /* \_SB_.PCI0.GPP4._CRS.RBUF */
+                    Return (RBUF) /* \_SB_.PCI0.GPP4.RHRS.RBUF */
                 }
 
                 Device (WLAN)
@@ -5693,14 +5706,14 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
     }
 
     Name (TSOS, 0x75)
-    If (CondRefOf (\XOSI))
+    If (CondRefOf (\_OSI))
     {
-        If (XOSI ("Windows 2009"))
+        If (_OSI ("Windows 2009"))
         {
             TSOS = 0x50
         }
 
-        If (XOSI ("Windows 2015"))
+        If (_OSI ("Windows 2015"))
         {
             TSOS = 0x70
         }
