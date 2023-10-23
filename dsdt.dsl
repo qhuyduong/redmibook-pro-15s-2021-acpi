@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Mon Oct 23 09:47:51 2023
+ * Disassembly of dsdt.aml, Mon Oct 23 10:31:08 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x00006512 (25874)
+ *     Length           0x000065CE (26062)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0xE6
+ *     Checksum         0x5D
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -4127,7 +4127,13 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                     OperationRegion (ECF2, EmbeddedControl, Zero, 0xFF)
                     Field (ECF2, ByteAcc, Lock, Preserve)
                     {
-                        Offset (0x0E), 
+                        XXX0,   8, 
+                        XXX1,   8, 
+                        XXX2,   8, 
+                        Offset (0x0B), 
+                        IKBW,   8, 
+                        USBC,   8, 
+                        USBE,   8, 
                         STAS,   8, 
                             ,   7, 
                         EOBF,   1, 
@@ -4141,8 +4147,28 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         Offset (0x20), 
                         RCMD,   8, 
                             ,   7, 
+                        EGC6,   1, 
+                        TESR,   8, 
+                        HBDA,   8, 
+                        KBLL,   8, 
+                        ANGL,   16, 
+                        ACLI,   8, 
+                        FEST,   8, 
+                        Offset (0x60), 
+                        TSR1,   8, 
+                        TSR2,   8, 
+                        TSR3,   8, 
+                        TSI,    4, 
+                        HYST,   4, 
+                        TSHT,   8, 
+                        TSLT,   8, 
+                        TSSR,   8, 
+                        CHGR,   16, 
                         Offset (0x70), 
                         PECV,   8, 
+                        PLMX,   8, 
+                        TS4H,   8, 
+                        TS4L,   8, 
                         Offset (0x7C), 
                         DPVS,   8, 
                         Offset (0x7E), 
@@ -4150,7 +4176,8 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         LSTE,   1, 
                         Offset (0x80), 
                         ECWR,   8, 
-                        Offset (0x84), 
+                        XX10,   8, 
+                        XX11,   16, 
                         B1DC,   16, 
                         B1FV,   16, 
                         B1FC,   16, 
@@ -4158,9 +4185,23 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         B1ST,   8, 
                         B1CR,   16, 
                         B1RC,   16, 
+                        B1VT,   16, 
+                        BPCN,   8, 
+                        Offset (0x99), 
+                        B1LC,   16, 
+                        Offset (0xA8), 
+                        FLAG,   1, 
+                            ,   6, 
+                        GPUF,   1, 
                         Offset (0xB2), 
                         KBBL,   8, 
+                        Offset (0xF0), 
+                            ,   3, 
+                        TPCC,   1, 
+                            ,   2, 
+                        DRMD,   1, 
                         Offset (0xF1), 
+                        TPSV,   8, 
                         THOT,   8, 
                         TCRT,   8
                     }
