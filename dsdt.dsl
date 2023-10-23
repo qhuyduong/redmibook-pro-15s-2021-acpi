@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Sun Oct 22 20:29:13 2023
+ * Disassembly of dsdt.aml, Mon Oct 23 09:47:51 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x000064E4 (25828)
+ *     Length           0x00006512 (25874)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0x3E
+ *     Checksum         0xE6
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -4158,6 +4158,8 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         B1ST,   8, 
                         B1CR,   16, 
                         B1RC,   16, 
+                        Offset (0xB2), 
+                        KBBL,   8, 
                         Offset (0xF1), 
                         THOT,   8, 
                         TCRT,   8
