@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Fri Oct 27 08:22:57 2023
+ * Disassembly of dsdt.aml, Fri Oct 27 10:19:32 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x000065F9 (26105)
+ *     Length           0x00006605 (26117)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0x4B
+ *     Checksum         0x80
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -4756,6 +4756,10 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                         {
                             Name (_HID, EisaId ("PNP0C0A") /* Control Method Battery */)  // _HID: Hardware ID
                             Name (_UID, Zero)  // _UID: Unique ID
+                            Name (_PCL, Package (0x01)  // _PCL: Power Consumer List
+                            {
+                                _SB
+                            })
                             Method (BATS, 0, NotSerialized)
                             {
                                 Local0 = ECWR /* \_SB_.PCI0.LPC0.EC0_.ECWR */
