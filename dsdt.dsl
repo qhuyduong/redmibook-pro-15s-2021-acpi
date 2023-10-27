@@ -5,13 +5,13 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.aml, Mon Oct 23 12:19:15 2023
+ * Disassembly of dsdt.aml, Fri Oct 27 08:22:57 2023
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x000065E6 (26086)
+ *     Length           0x000065F9 (26105)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0xC2
+ *     Checksum         0x4B
  *     OEM ID           "XMCC  "
  *     OEM Table ID     "XMCC2019"
  *     OEM Revision     0x00000003 (3)
@@ -20,6 +20,7 @@
  */
 DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
 {
+    External (_SB_, DeviceObj)
     External (_SB_.ALIB, MethodObj)    // 2 Arguments
     External (_SB_.APTS, MethodObj)    // 1 Arguments
     External (_SB_.AWAK, MethodObj)    // 1 Arguments
@@ -4838,6 +4839,7 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                                 BIXT [0x05] = DerefOf (BPKG [0x04])
                                 BIXT [0x06] = DerefOf (BPKG [0x05])
                                 BIXT [0x07] = DerefOf (BPKG [0x06])
+                                BIXT [0x08] = B1LC /* \_SB_.PCI0.LPC0.EC0_.B1LC */
                                 BIXT [0x0E] = DerefOf (BPKG [0x07])
                                 BIXT [0x0F] = DerefOf (BPKG [0x08])
                                 BIXT [0x10] = DerefOf (BPKG [0x09])
@@ -4881,8 +4883,6 @@ DefinitionBlock ("", "DSDT", 1, "XMCC  ", "XMCC2019", 0x00000003)
                                         XX15 = Arg0
                                     }
                                 }
-
-                                Return (Zero)
                             }
                         }
 
